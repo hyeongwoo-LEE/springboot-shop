@@ -4,9 +4,8 @@ import jpabook.jpashop.Repository.MemberRepository;
 import jpabook.jpashop.domain.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import org.springframework.transaction.annotation.Transactional;
-
-
 import java.util.List;
 
 @Service
@@ -44,5 +43,12 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Member findOne(Long id){
         return memberRepository.findOne(id);
+    }
+
+    @Transacion
+    public void update(Long id, String name) {
+
+        Member member = memberRepository.findOne(id);
+        member.setName(name);
     }
 }
