@@ -1,6 +1,6 @@
 package jpabook.jpashop.service;
 
-import jpabook.jpashop.Repository.MemberRepository;
+import jpabook.jpashop.repository.MemberRepository;
 import jpabook.jpashop.domain.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,9 +45,8 @@ public class MemberService {
         return memberRepository.findOne(id);
     }
 
-    @Transacion
+    @Transactional
     public void update(Long id, String name) {
-
         Member member = memberRepository.findOne(id);
         member.setName(name);
     }

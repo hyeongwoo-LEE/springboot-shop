@@ -1,6 +1,6 @@
 package jpabook.jpashop.service;
 
-import jpabook.jpashop.Repository.ItemRepository;
+import jpabook.jpashop.repository.ItemRepository;
 import jpabook.jpashop.domain.item.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
