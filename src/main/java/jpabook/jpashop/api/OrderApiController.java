@@ -10,6 +10,8 @@ import jpabook.jpashop.repository.order.query.OrderFlatDTO;
 import jpabook.jpashop.repository.order.query.OrderItemQueryDTO;
 import jpabook.jpashop.repository.order.query.OrderQueryDTO;
 import jpabook.jpashop.repository.order.query.OrderQueryRepository;
+import jpabook.jpashop.service.query.OrderDTO;
+import jpabook.jpashop.service.query.OrderQueryService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
-import static org.yaml.snakeyaml.nodes.NodeId.mapping;
+import static java.util.stream.Collectors.*;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -29,6 +29,7 @@ public class OrderApiController {
 
     private final OrderRepository orderRepository;
     private final OrderQueryRepository orderQueryRepository;
+    private final OrderQueryService orderQueryService;
 
     @GetMapping("/api/v1/orders")
     public List<Order> orderV1(){
@@ -54,13 +55,9 @@ public class OrderApiController {
     }
 
     @GetMapping("/api/v3/orders")
-    public List<OrderDTO> orderV3(){
-        List<Order> all = orderRepository.findAllWithItem();
+    public List<jpabook.jpashop.service.query.OrderDTO> orderV3(){
 
-        List<OrderDTO> orderDTOList = all.stream().map(o -> new OrderDTO(o))
-                .collect(toList());
-
-        return orderDTOList;
+        return orderQueryService.ordersV3();
     }
 
     @GetMapping("/api/v3.1/orders")
@@ -84,19 +81,20 @@ public class OrderApiController {
     }
 
     @GetMapping("/api/v6/orders")
-    public List<OrderFlatDTO> orderV6(){
+    public List<OrderQueryDTO> orderV6(){
         List<OrderFlatDTO> flats = orderQueryRepository.findAllByDTO_flat();
-/*
+
+        //중복 제거
         return flats.stream()
                .collect(groupingBy(o -> new OrderQueryDTO(o.getOrderId(),
                                o.getName(), o.getOrderDate(), o.getOrderStatus(), o.getAddress()),
-                       mapping(o -> new OrderItemQueryDto(o.getOrderId(),
+                       mapping(o -> new OrderItemQueryDTO(o.getOrderId(),
                                o.getItemName(), o.getOrderPrice(), o.getCount()), toList())
                )).entrySet().stream()
                 .map(e -> new OrderQueryDTO(e.getKey().getOrderId(),
                         e.getKey().getName(), e.getKey().getOrderDate(), e.getKey().getOrderStatus(),
                         e.getKey().getAddress(), e.getValue()))
-                .collect(toList());*/
+                .collect(toList());
     }
 
 
